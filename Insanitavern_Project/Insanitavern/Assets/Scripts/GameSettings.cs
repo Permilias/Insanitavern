@@ -9,7 +9,11 @@ public class GameSettings : ScriptableObject
     public float catchAttemptDelay;
     public float drinkingDuration;
 
+    [Header("Movement Settings")]
+    public float rayStartBackMult;
+
     [Header("Conflict Settings")]
     public int attackingPowerBonus;
-    public float pushStrength;
+    public float basePushForce;
+    public float pushResist;
 }

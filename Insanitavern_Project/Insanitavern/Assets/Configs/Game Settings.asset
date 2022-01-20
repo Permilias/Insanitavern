@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: Game Settings
   m_EditorClassIdentifier: 
   mugCatchRange: 1.6
-  catchAttemptDelay: 2
+  catchAttemptDelay: 0.18
   drinkingDuration: 2
+  rayStartBackMult: 1.4
   attackingPowerBonus: 1
-  pushStrength: 0
+  basePushForce: 6
+  pushResist: 0.3
