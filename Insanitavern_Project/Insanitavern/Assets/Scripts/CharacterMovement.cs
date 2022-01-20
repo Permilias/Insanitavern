@@ -15,12 +15,18 @@ public class CharacterMovement : MonoBehaviour
     public float detectionAngle;
     public float tryAngle;
 
+    LayerMask mask;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
 
-        pushResistance = 0.1f;
+        dirs = new Vector2[5];
+        rayDirs = new Vector3[5];
+        rays = new Ray[5];
+
+        mask = LayerMask.GetMask("Obstacle"); ;
     }
 
     public void SetTarget(Vector3 _target)
@@ -34,11 +40,12 @@ public class CharacterMovement : MonoBehaviour
         return new Vector2((Mathf.Cos(_rot) * baseVector.x) - (Mathf.Sin(_rot) * baseVector.y), (Mathf.Sin(_rot) * baseVector.x) + (Mathf.Cos(_rot) * baseVector.y));
     }
 
-    Vector2 target, pos, diff, dir, leftDir, rightDir, startPos, pushForce;
-    float pushResistance;
-    Vector3 rayStart, rayDir, leftRayDir, rightRayDir;
+    Vector2 target, pos, diff, startPos, pushForce;
+    Vector2[] dirs;
+    Vector3 rayStart;
+    Vector3[] rayDirs;
     RaycastHit rayHit;
-    Ray ray, leftRay, rightRay;
+    Ray[] rays;
 
     public Vector3 vel;
 
@@ -59,75 +66,74 @@ public class CharacterMovement : MonoBehaviour
         target = new Vector2(currentTarget.x, currentTarget.z);
         pos = new Vector2(transform.position.x, transform.position.z);
         diff = target - pos;
-        dir = diff.normalized;
+        dirs[0] = diff.normalized;
         if(pushForce.magnitude > 0)
         {
             if (debugs) print("applying pushforce " + pushForce.x + "," + pushForce.y);
-            dir += pushForce;
-            pushForce = Vector2.MoveTowards(pushForce, Vector2.zero, pushResistance);
+            dirs[0] += pushForce;
+            pushForce = Vector2.MoveTowards(pushForce, Vector2.zero, Registry.settings.pushResist);
             
         }
 
-        if (debugs) print("dir = " + dir.x + "," + dir.y);
+        if (debugs) print("dir = " + dirs[0].x + "," + dirs[0].y);
 
-        leftDir = AddRot(dir, -detectionAngle);
-        rightDir = AddRot(dir, detectionAngle);
+        dirs[1] = AddRot(dirs[0], -detectionAngle*2);
+        dirs[2] = AddRot(dirs[0], -detectionAngle);
+        dirs[3] = AddRot(dirs[0], detectionAngle*2);
+        dirs[4] = AddRot(dirs[0], detectionAngle);
+
         foundAngle = false;
-        startPos = pos - (dir/0.75f);
+        startPos = pos - (dirs[0]*Registry.settings.rayStartBackMult);
         rayStart = new Vector3(startPos.x, 0.1f, startPos.y);
+        int tryCount = 0;
 
         while (!foundAngle)
         {
-            rayDir = new Vector3(dir.x, 0.1f, dir.y);
-            leftRayDir = new Vector3(leftDir.x, 0.1f, leftDir.y);
-            rightRayDir = new Vector3(rightDir.x, 0.1f, rightDir.y);
-
-            ray = new Ray(rayStart, rayDir * detectionDistance);
-            leftRay = new Ray(rayStart, leftRayDir * detectionDistance);
-            rightRay = new Ray(rayStart, rightRayDir * detectionDistance);
-
-            Color centerCol = Color.green;
-            Color leftCol = Color.green;
-            Color rightCol = Color.green;
-
-            turnLeft = false;
-
             foundAngle = true;
-            LayerMask mask = LayerMask.GetMask("Obstacle");
-            if (Physics.Raycast(ray, out rayHit, detectionDistance, mask))
+            lowest = 9999;
+            for (int i = 0; i < 5; i++)
             {
-                foundAngle = false;
-                centerCol = Color.red;
-            }
+                rayDirs[i] = new Vector3(dirs[i].x, 0.1f, dirs[i].y);
+                rays[i] = new Ray(rayStart, rayDirs[i] * detectionDistance);
+                Color col = Color.green;
 
-            if (Physics.Raycast(leftRay, out rayHit, detectionDistance, mask))
-            {
-                lowest = rayHit.distance;
-                turnLeft = true;
-                foundAngle = false;
-                leftCol = Color.red;
-            }
 
-            if (Physics.Raycast(rightRay, out rayHit, detectionDistance, mask))
-            {
-                if (rayHit.distance < lowest)
+
+                if (Physics.Raycast(rays[i], out rayHit, detectionDistance, mask))
                 {
-                    turnLeft = false;
-                    lowest = rayHit.distance;
+                    foundAngle = false;
+                    col = Color.red;
+
+                    
+                    if (i >= 3)
+                    {
+                        turnLeft = true;
+                    }
+                    else
+                    {
+                        turnLeft = false;
+                    }
+
+
                 }
-                foundAngle = false;
-                rightCol = Color.red;
+
+                Debug.DrawRay(rayStart, rayDirs[i] * detectionDistance, col, 0);
             }
 
-            if(!foundAngle)
+            tryCount++;
+            if(tryCount > 100)
+            {
+                Debug.Log("prout");
+                foundAngle = true;
+            }
+
+            if (!foundAngle)
             {
                 if (turnLeft) TurnDirLeft(); else TurnDirRight();
             }
             else
             {
-                Debug.DrawRay(rayStart, rayDir * detectionDistance, centerCol, 0);
-                Debug.DrawRay(rayStart, leftRayDir * detectionDistance, leftCol, 0);
-                Debug.DrawRay(rayStart, rightRayDir * detectionDistance, rightCol, 0);
+
             }
 
 
@@ -135,7 +141,7 @@ public class CharacterMovement : MonoBehaviour
         }
 
         //apply velocity
-        vel = new Vector3(dir.x, 0, dir.y);
+        vel = new Vector3(dirs[0].x, 0, dirs[0].y);
 
         //still correction
         if (diff.sqrMagnitude < 0.2f) vel = Vector3.zero;
@@ -154,16 +160,18 @@ public class CharacterMovement : MonoBehaviour
 
     void TurnDirLeft()
     {
-        dir = AddRot(dir, tryAngle);
-        leftDir = AddRot(dir, -detectionAngle);
-        rightDir = AddRot(dir, detectionAngle);
+        for (int i = 0; i < 5; i++)
+        {
+            dirs[i] = AddRot(dirs[i], tryAngle);
+        }
     }
 
     void TurnDirRight()
     {
-        dir = AddRot(dir, -tryAngle);
-        leftDir = AddRot(dir, -detectionAngle);
-        rightDir = AddRot(dir, detectionAngle);
+        for (int i = 0; i < 5; i++)
+        {
+            dirs[i] = AddRot(dirs[i], -tryAngle);
+        }
     }
 }
 

@@ -10,8 +10,9 @@ public class Warrior
 
     public float thirst;
     public int targetMugIndex = -1;
-    public float catchAttemptTimer;
     public float drinkingTimer;
+
+    public float pushForce;
 
     public void UpdateTarget(int registryIndex)
     {

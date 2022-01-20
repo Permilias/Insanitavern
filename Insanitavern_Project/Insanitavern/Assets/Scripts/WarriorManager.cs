@@ -20,6 +20,8 @@ public class WarriorManager : MonoBehaviour
         FillWarriorQueue();
 
         currentConflicts = new List<WarriorConflict>();
+
+
     }
 
     void FillWarriorQueue()
@@ -50,6 +52,8 @@ public class WarriorManager : MonoBehaviour
         newWarrior.display = newWarriorObject.GetComponentInChildren<WarriorDisplay>();
         newWarrior.collision = newWarriorObject.GetComponent<CharacterCollision>();
         newWarrior.collision.warriorIndex = Registry.warriors.Count;
+        newWarrior.pushForce = Registry.settings.basePushForce;
+        newWarrior.display.damageObject.SetActive(false);
 
         Registry.warriors.Add(newWarrior);
     }
@@ -57,12 +61,13 @@ public class WarriorManager : MonoBehaviour
     public void WarriorUpdate(int index)
     {
         Registry.warriors[index].display.beerObject.SetActive(false);
-        Registry.warriors[index].display.damageObject.SetActive(false);
+
         float lowest = 999;
         int chosenIndex = -1;
         bool drinking = false;
         for (int i = 0; i < Registry.mugs.Count; i++)
         {
+            #region If warrior is holding
             if (Registry.mugs[i].holdingWarrior == index)
             {
                 Registry.warriors[index].display.beerObject.SetActive(true);
@@ -72,6 +77,7 @@ public class WarriorManager : MonoBehaviour
 
                 if (Registry.warriors[index].drinkingTimer <= 0f)
                 {
+                    Registry.warriors[index].drinkingTimer = 0f;
                     BeerManager.Instance.RemoveMug(i);
                     print("finished drinking");
                     return;
@@ -82,9 +88,12 @@ public class WarriorManager : MonoBehaviour
                 }
 
                 break;
+                #endregion
             }
             else
             {
+                #region If not holding, find target & target position
+                //get mug pos
                 Vector3 mugPos = Registry.mugs[i].holdingWarrior > -1 ?
                     Registry.warriors[Registry.mugs[i].holdingWarrior].movement.transform.position :
                     Registry.mugs[i].mugObject.transform.position;
@@ -94,6 +103,7 @@ public class WarriorManager : MonoBehaviour
                     lowest = dist;
                     chosenIndex = i;
                 }
+                #endregion
             }
         }
 
@@ -103,18 +113,18 @@ public class WarriorManager : MonoBehaviour
 
         Registry.warriors[index].targetMugIndex = chosenIndex;
 
-        if (Registry.warriors[index].catchAttemptTimer <= 0f)
+        if(chosenIndex > -1)
         {
-            if (lowest < Registry.settings.mugCatchRange)
+            if (Registry.mugs[chosenIndex].holdingWarrior <= -1)
             {
-                GiveMugToWarrior(index, Registry.warriors[index].targetMugIndex);
-                Registry.warriors[index].catchAttemptTimer = Registry.settings.catchAttemptDelay;
+                if (lowest < Registry.settings.mugCatchRange)
+                {
+                    GiveMugToWarrior(index, Registry.warriors[index].targetMugIndex);
+                }
             }
         }
-        else
-        {
-            Registry.warriors[index].catchAttemptTimer -= Time.deltaTime;
-        }
+
+
 
         Registry.warriors[index].UpdateTarget(index);
         Registry.warriors[index].UpdateDisplay();
@@ -172,7 +182,6 @@ public class WarriorManager : MonoBehaviour
 
     public void AddConflict(int warrior, int collidedWarrior)
     {
-        print("addingConflict");
 
         WarriorConflict conflict = new WarriorConflict(warrior, collidedWarrior);
 
@@ -182,15 +191,21 @@ public class WarriorManager : MonoBehaviour
             if(currentConflicts[i].index == conflict.index)
             {
                 adds = false;
+                print("conflict already exists");
                 break;
             }
         }
 
-        if (adds) currentConflicts.Add(conflict);
+        if (!adds) return;
+
+            print("addingConflict");
+
+        currentConflicts.Add(conflict);
     }
 
     public void ResolveConflicts()
     {
+
         for (int i = 0; i < currentConflicts.Count; i++)
         {
             ResolveConflict(i);
@@ -201,10 +216,12 @@ public class WarriorManager : MonoBehaviour
 
     public void ResolveConflict(int conflictIndex)
     {
+        print("resolving conflict" + conflictIndex);
+
         int attackingPower = Registry.settings.attackingPowerBonus;
         int attackedPower = 0;
-
-        if (currentConflicts[conflictIndex].attackingMugIndex >= 0) return;
+            
+   
 
         if (attackingPower >= attackedPower)
         {
@@ -216,11 +233,13 @@ public class WarriorManager : MonoBehaviour
 
             print("what");
             Registry.warriors[currentConflicts[conflictIndex].attackedWarrior].movement.Push(PushDir(currentConflicts[conflictIndex].attackingWarrior, currentConflicts[conflictIndex].attackedWarrior));
+            Registry.warriors[currentConflicts[conflictIndex].attackedWarrior].display.DamageFrame();
         }
         else
         {
             print("what2");
-            Registry.warriors[currentConflicts[conflictIndex].attackedWarrior].movement.Push(PushDir(currentConflicts[conflictIndex].attackedWarrior, currentConflicts[conflictIndex].attackingWarrior));
+            Registry.warriors[currentConflicts[conflictIndex].attackingWarrior].movement.Push(PushDir(currentConflicts[conflictIndex].attackedWarrior, currentConflicts[conflictIndex].attackingWarrior));
+            Registry.warriors[currentConflicts[conflictIndex].attackingWarrior].display.DamageFrame();
         }     
     }
 
@@ -228,7 +247,9 @@ public class WarriorManager : MonoBehaviour
     {
         Vector3 diff = Registry.warriors[pushedWarrior].movement.transform.position - Registry.warriors[pushingWarrior].movement.transform.position;
         diff.Normalize();
-        return diff * 6;
+        diff *= Registry.warriors[pushingWarrior].pushForce;
+        print(diff);
+        return diff;
     }
 
     public void GiveMugToWarrior(int warriorIndex, int mugIndex)
