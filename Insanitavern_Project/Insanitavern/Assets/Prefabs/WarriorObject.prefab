@@ -47,10 +47,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f6b927650b35ca42825a6ba555ae5bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 3
-  detectionDistance: 3
+  speed: 4
+  detectionDistance: 4.5
   detectionAngle: 20
-  tryAngle: 5
+  tryAngle: 10
   vel: {x: 0, y: 0, z: 0}
   debugs: 0
 --- !u!114 &7666357024032058635

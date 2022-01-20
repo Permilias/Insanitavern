@@ -50,6 +50,7 @@ public class CharacterMovement : MonoBehaviour
     public Vector3 vel;
 
     float lowest;
+    int lowestIndex;
     bool foundAngle, turnLeft;
 
     public void Push(Vector2 force)
@@ -59,6 +60,7 @@ public class CharacterMovement : MonoBehaviour
     }
 
     public bool debugs;
+    bool turningLeft, decided;
 
     private void FixedUpdate()
     {
@@ -84,40 +86,39 @@ public class CharacterMovement : MonoBehaviour
 
         foundAngle = false;
         startPos = pos - (dirs[0]*Registry.settings.rayStartBackMult);
-        rayStart = new Vector3(startPos.x, 0.1f, startPos.y);
+        rayStart = new Vector3(startPos.x, 0.01f, startPos.y);
         int tryCount = 0;
+        decided = false;
 
         while (!foundAngle)
         {
             foundAngle = true;
             lowest = 9999;
+            lowestIndex = -1;
+           
             for (int i = 0; i < 5; i++)
             {
-                rayDirs[i] = new Vector3(dirs[i].x, 0.1f, dirs[i].y);
-                rays[i] = new Ray(rayStart, rayDirs[i] * detectionDistance);
+                float distance = i == 0 ? detectionDistance * 1.5f : detectionDistance;
+
+                rayDirs[i] = new Vector3(dirs[i].x, 0.01f, dirs[i].y);
+                rays[i] = new Ray(rayStart, rayDirs[i] * distance);
                 Color col = Color.green;
 
 
 
-                if (Physics.Raycast(rays[i], out rayHit, detectionDistance, mask))
+                if (Physics.Raycast(rays[i], out rayHit, distance, mask))
                 {
+                    if(rayHit.distance < lowest)
+                    {
+                        lowest = rayHit.distance;
+                        lowestIndex = i;
+                    }
+
                     foundAngle = false;
                     col = Color.red;
-
-                    
-                    if (i >= 3)
-                    {
-                        turnLeft = true;
-                    }
-                    else
-                    {
-                        turnLeft = false;
-                    }
-
-
                 }
 
-                Debug.DrawRay(rayStart, rayDirs[i] * detectionDistance, col, 0);
+                Debug.DrawRay(rayStart, rayDirs[i] * distance, col, 0);
             }
 
             tryCount++;
@@ -129,15 +130,46 @@ public class CharacterMovement : MonoBehaviour
 
             if (!foundAngle)
             {
-                if (turnLeft) TurnDirLeft(); else TurnDirRight();
-            }
-            else
-            {
+                if(decided)
+                {
+                    if (turningLeft)
+                    {
+                        TurnDirLeft();
+                    }
+                    else
+                    {
+                        TurnDirRight();
+                    }
+                }
+                else
+                {
+                    if (lowestIndex == 0)
+                    {
+                        if (turningLeft)
+                        {
+                            TurnDirLeft();
+                        }
+                        else
+                        {
+                            TurnDirRight();
+                        }
+                    }
+                    else if (lowestIndex >= 1)
+                    {
+                        if (lowestIndex >= 3)
+                        {
+
+                            TurnDirRight();
+
+                        }
+                        else
+                        {
+                            TurnDirLeft();
+                        }
+                    }
+                }
 
             }
-
-
-
         }
 
         //apply velocity
@@ -145,7 +177,6 @@ public class CharacterMovement : MonoBehaviour
 
         //still correction
         if (diff.sqrMagnitude < 0.2f) vel = Vector3.zero;
-
 
         rb.velocity = vel * speed;
 
@@ -164,6 +195,12 @@ public class CharacterMovement : MonoBehaviour
         {
             dirs[i] = AddRot(dirs[i], tryAngle);
         }
+
+        if(!decided)
+        {
+            decided = true;
+            turningLeft = true;
+        }
     }
 
     void TurnDirRight()
@@ -171,6 +208,12 @@ public class CharacterMovement : MonoBehaviour
         for (int i = 0; i < 5; i++)
         {
             dirs[i] = AddRot(dirs[i], -tryAngle);
+        }
+
+        if (!decided)
+        {
+            decided = true;
+            turningLeft = false;
         }
     }
 }

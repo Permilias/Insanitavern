@@ -57,8 +57,7 @@ public class BeerManager : MonoBehaviour
         pos.y = mugSpawnHeight;
         mugObject.transform.position = pos;
 
-        mugObject.GetComponent<Rigidbody>().velocity = new Vector3(0, -10, 0);
-
+        mugObject.GetComponent<Rigidbody>().velocity = new Vector3(0, -21, 0);
         newMug.mugObject = mugObject;
         newMug.holdingWarrior = -1;
 
