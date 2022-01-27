@@ -20,7 +20,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - Diffuse_01:
-        m_Texture: {fileID: 2800000, guid: 2f1fbc15739b00f4f9c44361fcc3f7ee, type: 3}
+        m_Texture: {fileID: 2800000, guid: 76cf357557f40cd42a4df912e500a277, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Diffuse_02:
@@ -29,6 +29,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - Mask:
         m_Texture: {fileID: 2800000, guid: f98daa0e2b3ec4b4c825c7ec625973de, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_454f64b6b0e0421cab2a53bc2e6c283b_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 2f1fbc15739b00f4f9c44361fcc3f7ee, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -44,6 +48,12 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
-    m_Floats: []
-    m_Colors: []
+    m_Floats:
+    - MaskIntensity: 0.43
+    - TilingX: 3
+    - TilingY: 3
+    m_Colors:
+    - Diffuse_01_Mutiply: {r: 1, g: 1, b: 1, a: 0}
+    - Diffuse_02_Multiply: {r: 0.9716981, g: 0.79294235, b: 0.89786476, a: 0}
+    - Diffuse_Mutiply: {r: 0.6320754, g: 0.5711833, b: 0.5456123, a: 0}
   m_BuildTextureStacks: []

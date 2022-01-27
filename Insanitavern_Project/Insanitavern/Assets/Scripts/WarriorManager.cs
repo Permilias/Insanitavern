@@ -62,8 +62,13 @@ public class WarriorManager : MonoBehaviour
     {
         Registry.warriors[index].display.beerObject.SetActive(false);
 
+        if (Registry.warriors[index].punchTimer > 0)
+        {
+            Registry.warriors[index].punchTimer -= Time.deltaTime;
+        }
+
         float lowest = 999;
-        int chosenIndex = -1;
+        int targetMugIndex = -1;
         bool drinking = false;
         for (int i = 0; i < Registry.mugs.Count; i++)
         {
@@ -101,7 +106,7 @@ public class WarriorManager : MonoBehaviour
                 if (dist < lowest)
                 {
                     lowest = dist;
-                    chosenIndex = i;
+                    targetMugIndex = i;
                 }
                 #endregion
             }
@@ -111,17 +116,26 @@ public class WarriorManager : MonoBehaviour
 
         Registry.warriors[index].drinkingTimer = 0f;
 
-        Registry.warriors[index].targetMugIndex = chosenIndex;
+        Registry.warriors[index].targetMugIndex = targetMugIndex;
 
-        if(chosenIndex > -1)
+        if(targetMugIndex > -1)
         {
-            if (Registry.mugs[chosenIndex].holdingWarrior <= -1)
+            if (lowest < Registry.settings.mugCatchRange)
             {
-                if (lowest < Registry.settings.mugCatchRange)
+                if (Registry.mugs[targetMugIndex].holdingWarrior <= -1)
                 {
                     GiveMugToWarrior(index, Registry.warriors[index].targetMugIndex);
                 }
+                else
+                {
+                    if (Registry.warriors[index].punchTimer <= 0f)
+                    {
+                        AddConflict(index, Registry.mugs[targetMugIndex].holdingWarrior);
+                    }
+                }
+
             }
+
         }
 
 
@@ -181,8 +195,7 @@ public class WarriorManager : MonoBehaviour
     public List<WarriorConflict> currentConflicts;
 
     public void AddConflict(int warrior, int collidedWarrior)
-    {
-
+    { 
         WarriorConflict conflict = new WarriorConflict(warrior, collidedWarrior);
 
         bool adds = true;
@@ -232,14 +245,13 @@ public class WarriorManager : MonoBehaviour
             }
 
             print("what");
-            Registry.warriors[currentConflicts[conflictIndex].attackedWarrior].movement.Push(PushDir(currentConflicts[conflictIndex].attackingWarrior, currentConflicts[conflictIndex].attackedWarrior));
-            Registry.warriors[currentConflicts[conflictIndex].attackedWarrior].display.DamageFrame();
+            Registry.warriors[currentConflicts[conflictIndex].attackingWarrior].punchTimer = Registry.settings.punchDelay;
+            Registry.warriors[currentConflicts[conflictIndex].attackedWarrior].GetPunched(PushDir(currentConflicts[conflictIndex].attackingWarrior, currentConflicts[conflictIndex].attackedWarrior));
         }
         else
         {
             print("what2");
-            Registry.warriors[currentConflicts[conflictIndex].attackingWarrior].movement.Push(PushDir(currentConflicts[conflictIndex].attackedWarrior, currentConflicts[conflictIndex].attackingWarrior));
-            Registry.warriors[currentConflicts[conflictIndex].attackingWarrior].display.DamageFrame();
+            Registry.warriors[currentConflicts[conflictIndex].attackingWarrior].GetPunched(PushDir(currentConflicts[conflictIndex].attackedWarrior, currentConflicts[conflictIndex].attackingWarrior));
         }     
     }
 

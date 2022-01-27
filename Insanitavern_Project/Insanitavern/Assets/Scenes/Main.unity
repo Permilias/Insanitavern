@@ -407,7 +407,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 79ecc8b83adfe124caf9ea4c6d548825, type: 2}
+  - {fileID: 2100000, guid: 6ad3deae37f456e4b9991e4ca4d124c1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -529,7 +529,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: 279f0de48e9b33544be58b48bd02d165, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 79ecc8b83adfe124caf9ea4c6d548825, type: 2}
+      objectReference: {fileID: 2100000, guid: 6ad3deae37f456e4b9991e4ca4d124c1, type: 2}
     - target: {fileID: 919132149155446097, guid: 279f0de48e9b33544be58b48bd02d165, type: 3}
       propertyPath: m_Name
       value: PH_Table
@@ -690,7 +690,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 79ecc8b83adfe124caf9ea4c6d548825, type: 2}
+  - {fileID: 2100000, guid: 6ad3deae37f456e4b9991e4ca4d124c1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1573,7 +1573,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7578512c5b84a044fb47383a1bcb28c4, type: 2}
+  - {fileID: 2100000, guid: 6ad3deae37f456e4b9991e4ca4d124c1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1894,7 +1894,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: 3c5e049ae64d33441b754705063e0118, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 7578512c5b84a044fb47383a1bcb28c4, type: 2}
+      objectReference: {fileID: 2100000, guid: 6ad3deae37f456e4b9991e4ca4d124c1, type: 2}
     - target: {fileID: 919132149155446097, guid: 3c5e049ae64d33441b754705063e0118, type: 3}
       propertyPath: m_Name
       value: PH_Fireplace
@@ -2153,7 +2153,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 79ecc8b83adfe124caf9ea4c6d548825, type: 2}
+  - {fileID: 2100000, guid: 6ad3deae37f456e4b9991e4ca4d124c1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2653,7 +2653,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 79ecc8b83adfe124caf9ea4c6d548825, type: 2}
+  - {fileID: 2100000, guid: 6ad3deae37f456e4b9991e4ca4d124c1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3633,7 +3633,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: 279f0de48e9b33544be58b48bd02d165, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 79ecc8b83adfe124caf9ea4c6d548825, type: 2}
+      objectReference: {fileID: 2100000, guid: 6ad3deae37f456e4b9991e4ca4d124c1, type: 2}
     - target: {fileID: 919132149155446097, guid: 279f0de48e9b33544be58b48bd02d165, type: 3}
       propertyPath: m_Name
       value: PH_Table
@@ -3784,7 +3784,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: 279f0de48e9b33544be58b48bd02d165, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 79ecc8b83adfe124caf9ea4c6d548825, type: 2}
+      objectReference: {fileID: 2100000, guid: 6ad3deae37f456e4b9991e4ca4d124c1, type: 2}
     - target: {fileID: 919132149155446097, guid: 279f0de48e9b33544be58b48bd02d165, type: 3}
       propertyPath: m_Name
       value: PH_Table
@@ -5932,7 +5932,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: 279f0de48e9b33544be58b48bd02d165, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 79ecc8b83adfe124caf9ea4c6d548825, type: 2}
+      objectReference: {fileID: 2100000, guid: 6ad3deae37f456e4b9991e4ca4d124c1, type: 2}
     - target: {fileID: 919132149155446097, guid: 279f0de48e9b33544be58b48bd02d165, type: 3}
       propertyPath: m_Name
       value: PH_Table

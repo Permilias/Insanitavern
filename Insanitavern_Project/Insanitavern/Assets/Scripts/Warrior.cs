@@ -11,6 +11,7 @@ public class Warrior
     public float thirst;
     public int targetMugIndex = -1;
     public float drinkingTimer;
+    public float punchTimer;
 
     public float pushForce;
 
@@ -50,5 +51,12 @@ public class Warrior
             last = 1;
             display.graphicsParent.transform.localScale = new Vector3(1, 1, 1);
         }
+    }
+
+    public void GetPunched(Vector2 dir)
+    {
+        movement.Push(dir);
+        display.DamageFrame();
+        punchTimer = Registry.settings.punchDelayAfterBeingPunched;
     }
 }
