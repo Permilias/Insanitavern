@@ -54,6 +54,7 @@ public class WarriorManager : MonoBehaviour
         newWarrior.collision.warriorIndex = Registry.warriors.Count;
         newWarrior.pushForce = Registry.settings.basePushForce;
         newWarrior.display.damageObject.SetActive(false);
+        newWarrior.thirst = 50;
 
         Registry.warriors.Add(newWarrior);
     }
@@ -62,67 +63,88 @@ public class WarriorManager : MonoBehaviour
     {
         Registry.warriors[index].display.beerObject.SetActive(false);
 
+        //decrease punch timer
         if (Registry.warriors[index].punchTimer > 0)
         {
             Registry.warriors[index].punchTimer -= Time.deltaTime;
         }
 
-        float lowest = 999;
-        int targetMugIndex = -1;
-        bool drinking = false;
+        //thirst
+        Registry.warriors[index].thirst += Registry.settings.baseThirstGain * Time.deltaTime;
+        if (Registry.warriors[index].thirst >= Registry.settings.maxThirst) Registry.warriors[index].thirst = Registry.settings.maxThirst;
+        Registry.warriors[index].display.thirstTM.text = Mathf.RoundToInt(Registry.warriors[index].thirst).ToString();
+
+        float dist = 999;
+        Vector2Int highestPriority = new Vector2Int(-1, 0);
         for (int i = 0; i < Registry.mugs.Count; i++)
         {
             #region If warrior is holding
             if (Registry.mugs[i].holdingWarrior == index)
             {
                 Registry.warriors[index].display.beerObject.SetActive(true);
-                drinking = true;
-
+                Registry.warriors[index].UpdateTarget(-1);
                 Registry.warriors[index].UpdateDisplay();
 
                 if (Registry.warriors[index].drinkingTimer <= 0f)
                 {
                     Registry.warriors[index].drinkingTimer = 0f;
                     BeerManager.Instance.RemoveMug(i);
+                    Registry.warriors[index].thirst = 0;
                     print("finished drinking");
-                    return;
                 }
                 else
                 {
                     Registry.warriors[index].drinkingTimer -= Time.deltaTime;
                 }
 
-                break;
+                return;
                 #endregion
             }
             else
             {
                 #region If not holding, find target & target position
-                //get mug pos
+
+                //get priority
+                int priority = (int)Registry.warriors[index].thirst;
+
                 Vector3 mugPos = Registry.mugs[i].holdingWarrior > -1 ?
                     Registry.warriors[Registry.mugs[i].holdingWarrior].movement.transform.position :
                     Registry.mugs[i].mugObject.transform.position;
-                float dist = Vector3.Distance(mugPos, Registry.warriors[index].movement.transform.position);
-                if (dist < lowest)
+                dist = Vector3.Distance(mugPos, Registry.warriors[index].movement.transform.position);
+
+                priority -= (int)(dist * Registry.settings.distanceMultiplier);
+
+                if(priority < 20)
                 {
-                    lowest = dist;
-                    targetMugIndex = i;
+                    continue;
                 }
+
+                if(priority >= 100)
+                {
+                    highestPriority.x = i;
+                    highestPriority.y = priority;
+                    break;
+                }
+
+                if(highestPriority.y < priority)
+                {
+                    highestPriority.y = priority;
+                    highestPriority.x = i;
+                }
+
                 #endregion
             }
         }
 
-        if (drinking) return;
-
         Registry.warriors[index].drinkingTimer = 0f;
 
-        Registry.warriors[index].targetMugIndex = targetMugIndex;
+        Registry.warriors[index].targetMugIndex = highestPriority.x;
 
-        if(targetMugIndex > -1)
+        if(highestPriority.x > -1)
         {
-            if (lowest < Registry.settings.mugCatchRange)
+            if (dist < Registry.settings.mugCatchRange)
             {
-                if (Registry.mugs[targetMugIndex].holdingWarrior <= -1)
+                if (Registry.mugs[highestPriority.x].holdingWarrior <= -1)
                 {
                     GiveMugToWarrior(index, Registry.warriors[index].targetMugIndex);
                 }
@@ -130,15 +152,17 @@ public class WarriorManager : MonoBehaviour
                 {
                     if (Registry.warriors[index].punchTimer <= 0f)
                     {
-                        AddConflict(index, Registry.mugs[targetMugIndex].holdingWarrior);
+                        AddConflict(index, Registry.mugs[highestPriority.x].holdingWarrior);
                     }
                 }
 
             }
+        }
+        else
+        {
+            //wander
 
         }
-
-
 
         Registry.warriors[index].UpdateTarget(index);
         Registry.warriors[index].UpdateDisplay();

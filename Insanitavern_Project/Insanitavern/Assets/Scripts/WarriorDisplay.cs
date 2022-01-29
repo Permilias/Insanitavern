@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class WarriorDisplay : MonoBehaviour
 {
     public Transform graphicsParent;
     public GameObject beerObject, damageObject;
+    public TextMeshPro thirstTM;
 
     public void DamageFrame()
     {

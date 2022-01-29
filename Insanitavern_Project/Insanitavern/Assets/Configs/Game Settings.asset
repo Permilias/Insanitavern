@@ -18,6 +18,9 @@ MonoBehaviour:
   punchDelayAfterBeingPunched: 0.8
   drinkingDuration: 0.93
   rayStartBackMult: 1.4
+  baseThirstGain: 3
+  maxThirst: 100
+  distanceMultiplier: 8
   attackingPowerBonus: 1
   basePushForce: 6
   pushResist: 0.2

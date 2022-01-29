@@ -14,6 +14,11 @@ public class GameSettings : ScriptableObject
     [Header("Movement Settings")]
     public float rayStartBackMult;
 
+    [Header("Thirst Settings")]
+    public float baseThirstGain;
+    public float maxThirst;
+    public float distanceMultiplier;
+
     [Header("Conflict Settings")]
     public int attackingPowerBonus;
     public float basePushForce;
