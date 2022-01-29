@@ -8,7 +8,6 @@ public static class InputUtility
 
     public static bool AnyHeld()
     {
-
         return false;
     }
     public static bool EnterPressed()

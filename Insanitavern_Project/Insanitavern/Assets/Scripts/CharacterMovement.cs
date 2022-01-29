@@ -34,11 +34,7 @@ public class CharacterMovement : MonoBehaviour
         currentTarget = _target;
     }
 
-    Vector2 AddRot(Vector2 baseVector, float rotAdded)
-    {
-        float _rot = Mathf.Deg2Rad * rotAdded;
-        return new Vector2((Mathf.Cos(_rot) * baseVector.x) - (Mathf.Sin(_rot) * baseVector.y), (Mathf.Sin(_rot) * baseVector.x) + (Mathf.Cos(_rot) * baseVector.y));
-    }
+
 
     Vector2 target, pos, diff, startPos, pushForce;
     Vector2[] dirs;
@@ -79,10 +75,10 @@ public class CharacterMovement : MonoBehaviour
 
         if (debugs) print("dir = " + dirs[0].x + "," + dirs[0].y);
 
-        dirs[1] = AddRot(dirs[0], -detectionAngle*2);
-        dirs[2] = AddRot(dirs[0], -detectionAngle);
-        dirs[3] = AddRot(dirs[0], detectionAngle*2);
-        dirs[4] = AddRot(dirs[0], detectionAngle);
+        dirs[1] = Utility.AddRot(dirs[0], -detectionAngle*2);
+        dirs[2] = Utility.AddRot(dirs[0], -detectionAngle);
+        dirs[3] = Utility.AddRot(dirs[0], detectionAngle*2);
+        dirs[4] = Utility.AddRot(dirs[0], detectionAngle);
 
         foundAngle = false;
         startPos = pos - (dirs[0]*Registry.settings.rayStartBackMult);
@@ -193,7 +189,7 @@ public class CharacterMovement : MonoBehaviour
     {
         for (int i = 0; i < 5; i++)
         {
-            dirs[i] = AddRot(dirs[i], tryAngle);
+            dirs[i] = Utility.AddRot(dirs[i], tryAngle);
         }
 
         if(!decided)
@@ -207,7 +203,7 @@ public class CharacterMovement : MonoBehaviour
     {
         for (int i = 0; i < 5; i++)
         {
-            dirs[i] = AddRot(dirs[i], -tryAngle);
+            dirs[i] = Utility.AddRot(dirs[i], -tryAngle);
         }
 
         if (!decided)
