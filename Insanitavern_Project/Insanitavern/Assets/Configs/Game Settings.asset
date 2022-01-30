@@ -12,15 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64ec16833be92c946a602fc4ba0f5b27, type: 3}
   m_Name: Game Settings
   m_EditorClassIdentifier: 
-  mugCatchRange: 1.6
+  mugCatchRange: 2
   catchAttemptDelay: 0.18
   punchDelay: 0.8
   punchDelayAfterBeingPunched: 0.8
   drinkingDuration: 0.93
   rayStartBackMult: 1.4
-  baseThirstGain: 3
+  wanderMinMaxRange: {x: 2, y: 6}
+  wanderMinMaxDelay: {x: 4.44, y: 7.36}
+  wanderMinMaxSpeed: {x: 1.3, y: 2.7}
+  walkingSpeed: 2.8
+  runningSpeed: 4.3
+  baseThirstGain: 10
   maxThirst: 100
-  distanceMultiplier: 8
+  distanceMultiplier: 5
+  runningThreshold: 0
   attackingPowerBonus: 1
   basePushForce: 6
   pushResist: 0.2

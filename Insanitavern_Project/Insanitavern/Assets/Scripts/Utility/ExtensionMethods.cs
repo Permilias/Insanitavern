@@ -23,4 +23,9 @@ public static class ExtensionMethods
     {
         return new Vector2(vec.x, vec.y);
     }
+
+    public static float RandomBetween(this Vector2 vec)
+    {
+        return Random.Range(vec.x, vec.y);
+    }
 }

@@ -4018,7 +4018,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7dd20397547d4643b322be777c2c988, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mugSpawnHeight: 6
+  mugSpawnHeight: 7
   mugObject: {fileID: 7278611603518197005, guid: 6450d8809d5c1b74c8ba4bf60f5788c4, type: 3}
 --- !u!1 &1239608733
 GameObject:

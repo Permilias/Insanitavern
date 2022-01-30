@@ -13,11 +13,17 @@ public class GameSettings : ScriptableObject
 
     [Header("Movement Settings")]
     public float rayStartBackMult;
+    public Vector2 wanderMinMaxRange;
+    public Vector2 wanderMinMaxDelay;
+    public Vector2 wanderMinMaxSpeed;
+    public float walkingSpeed;
+    public float runningSpeed;
 
     [Header("Thirst Settings")]
     public float baseThirstGain;
     public float maxThirst;
     public float distanceMultiplier;
+    public float runningThreshold;
 
     [Header("Conflict Settings")]
     public int attackingPowerBonus;

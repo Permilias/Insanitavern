@@ -26,7 +26,7 @@ public class CharacterMovement : MonoBehaviour
         rayDirs = new Vector3[5];
         rays = new Ray[5];
 
-        mask = LayerMask.GetMask("Obstacle"); ;
+        mask = LayerMask.GetMask("Obstacle");
     }
 
     public void SetTarget(Vector3 _target)
@@ -57,10 +57,10 @@ public class CharacterMovement : MonoBehaviour
 
     public bool debugs;
     bool turningLeft, decided;
+    public bool wanderPrompt;
 
     private void FixedUpdate()
     {
-        //direction
         target = new Vector2(currentTarget.x, currentTarget.z);
         pos = new Vector2(transform.position.x, transform.position.z);
         diff = target - pos;
@@ -99,8 +99,6 @@ public class CharacterMovement : MonoBehaviour
                 rayDirs[i] = new Vector3(dirs[i].x, 0.01f, dirs[i].y);
                 rays[i] = new Ray(rayStart, rayDirs[i] * distance);
                 Color col = Color.green;
-
-
 
                 if (Physics.Raycast(rays[i], out rayHit, distance, mask))
                 {
